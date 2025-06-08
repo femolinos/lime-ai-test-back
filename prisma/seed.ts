@@ -8,6 +8,7 @@ async function seed() {
     data: Array.from({ length: 5 }).map(() => {
       return {
         name: faker.person.fullName(),
+        dateOfBirth: faker.date.birthdate(),
       }
     }),
   })

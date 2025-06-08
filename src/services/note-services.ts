@@ -13,7 +13,11 @@ import {
 } from './ai-services'
 
 export async function fetchAllNotes() {
-  const notes = await prisma.note.findMany()
+  const notes = await prisma.note.findMany({
+    include: {
+      patient: true,
+    },
+  })
 
   return notes
 }

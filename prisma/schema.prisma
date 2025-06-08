@@ -8,11 +8,12 @@ datasource db {
 }
 
 model Patient {
-  id        String   @id @default(uuid())
-  name      String
-  patientId String   @unique @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(uuid())
+  name        String
+  dateOfBirth DateTime
+  patientId   String   @unique @default(cuid())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   Note Note[]
 }

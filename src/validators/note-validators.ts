@@ -75,7 +75,7 @@ export function updateNoteValidator(req: Request) {
     m1840,
     m1850,
     m1860,
-  } = updateNoteBodySchema.parse({ id: req.params, ...req.body })
+  } = updateNoteBodySchema.parse({ ...req.params, ...req.body })
 
   return {
     id,
