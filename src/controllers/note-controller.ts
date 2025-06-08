@@ -2,12 +2,14 @@ import { Request, Response } from 'express'
 import { ZodError } from 'zod'
 
 import {
+  createNewPatientNote,
   fetchAllNotes,
   findNoteById,
   updatePatientNote,
 } from '@/services/note-services'
 
 import {
+  createNoteValidator,
   getNoteByIdValidator,
   updateNoteValidator,
 } from '@/validators/note-validators'
@@ -47,6 +49,30 @@ export async function getNoteById(req: Request, res: Response) {
       return res
         .status(400)
         .json({ message: 'Invalid request params', errors: error.errors })
+    }
+
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+}
+
+export async function createNote(req: Request, res: Response) {
+  try {
+    const { patientId, file } = createNoteValidator(req)
+
+    const note = await createNewPatientNote({ patientId, file })
+
+    if (!note) {
+      return res.status(500).json({ message: 'Note not created!' })
+    }
+
+    res.status(201).json({ message: 'Note created successfully', note })
+  } catch (error) {
+    logger.error('Error creating note', error)
+
+    if (error instanceof ZodError) {
+      return res
+        .status(400)
+        .json({ message: 'Invalid request body', errors: error.errors })
     }
 
     return res.status(500).json({ message: 'Internal server error' })

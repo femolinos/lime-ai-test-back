@@ -1,6 +1,7 @@
 import prisma from '@/orm/prisma.client'
 
 import {
+  CreateNoteBodySchema,
   GetNoteByIdParamsSchema,
   UpdateNoteBodySchema,
 } from '@/validators/note-validators'
@@ -15,6 +16,13 @@ export async function findNoteById({ id }: GetNoteByIdParamsSchema) {
   const note = await prisma.note.findUnique({ where: { id } })
 
   return note
+}
+
+export async function createNewPatientNote({
+  patientId,
+  file,
+}: CreateNoteBodySchema) {
+  // TODO: insert logic here
 }
 
 export async function updatePatientNote({
