@@ -15,27 +15,37 @@ export function getNoteByIdValidator(req: Request) {
 
 const createNoteBodySchema = z.object({
   patientId: z.string({ required_error: 'Patient ID is required' }).uuid(),
-  file: z
-    .object({
-      fieldname: z.string(),
-      originalname: z.string(),
-      encoding: z.string(),
-      mimetype: z.string(),
-      buffer: z.instanceof(Buffer),
-      size: z.number(),
-    })
-    .optional(),
+  audio: z.custom<Express.Multer.File>(
+    (val) => {
+      if (!val) return false
+      const allowedMimeTypes = [
+        'audio/flac',
+        'audio/x-m4a',
+        'audio/mpeg',
+        'audio/mp4',
+        'audio/ogg',
+        'audio/wav',
+        'audio/webm',
+      ]
+      const file = val as Express.Multer.File
+      return allowedMimeTypes.includes(file.mimetype)
+    },
+    {
+      message:
+        'Invalid file type. Supported formats: flac, m4a, mp3, mp4, ogg, wav, webm',
+    },
+  ),
 })
 
 export type CreateNoteBodySchema = z.infer<typeof createNoteBodySchema>
 
 export function createNoteValidator(req: Request) {
-  const { patientId, file } = createNoteBodySchema.parse({
+  const { patientId, audio } = createNoteBodySchema.parse({
     patientId: req.body.patientId,
-    file: req.file,
+    audio: req.file,
   })
 
-  return { patientId, file }
+  return { patientId, audio }
 }
 
 const updateNoteBodySchema = z.object({

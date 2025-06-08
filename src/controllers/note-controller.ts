@@ -57,15 +57,17 @@ export async function getNoteById(req: Request, res: Response) {
 
 export async function createNote(req: Request, res: Response) {
   try {
-    const { patientId, file } = createNoteValidator(req)
+    const { patientId, audio } = createNoteValidator(req)
 
-    const note = await createNewPatientNote({ patientId, file })
+    const newNote = await createNewPatientNote({ patientId, audio })
 
-    if (!note) {
+    if (!newNote) {
       return res.status(500).json({ message: 'Note not created!' })
     }
 
-    res.status(201).json({ message: 'Note created successfully', note })
+    res
+      .status(201)
+      .json({ message: 'Note created successfully', note: newNote })
   } catch (error) {
     logger.error('Error creating note', error)
 
