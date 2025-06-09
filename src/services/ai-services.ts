@@ -16,7 +16,7 @@ export async function transcribeAudio(filePath: string): Promise<string> {
     })
 
     return transcription
-  } catch (error: unknown) {
+  } catch (error) {
     console.error('Transcription error:', error)
     const errorMessage =
       error instanceof Error ? error.message : 'Unknown error occurred'
